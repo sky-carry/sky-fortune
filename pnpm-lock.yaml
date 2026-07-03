@@ -53,6 +53,9 @@ importers:
 
   apps/global:
     dependencies:
+      '@sky-fortune/ai':
+        specifier: workspace:*
+        version: link:../../packages/ai
       '@sky-fortune/content':
         specifier: workspace:*
         version: link:../../packages/content

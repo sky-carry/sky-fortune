@@ -125,17 +125,25 @@ export default async function BaziPage({ searchParams }: { searchParams: Promise
       </section>
 
       <section className="rounded-lg border border-stone-700 bg-gradient-to-b from-stone-900 to-stone-950 p-8 text-center">
-        <h2 className="text-xl text-stone-50">Your full reading is being crafted</h2>
+        <h2 className="text-xl text-stone-50">Go deeper into your chart</h2>
         <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-stone-400">
-          Personality, career leanings, relationship patterns, and a year-by-year outlook —
-          written for your exact chart. Personalized AI readings are coming soon.
+          Personality, career leanings, relationship patterns, and a year-ahead outlook —
+          written for your exact pillars, not your sun sign.
         </p>
-        <Link
-          href="/compatibility"
-          className="mt-6 inline-block rounded border border-stone-600 px-6 py-2 text-sm text-stone-200 transition hover:border-stone-400"
-        >
-          Meanwhile — check your compatibility
-        </Link>
+        <div className="mt-6 flex flex-wrap justify-center gap-3">
+          <Link
+            href={`/reading?date=${sp.date}&time=${sp.time ?? '12:00'}&tz=${sp.tz ?? '8'}&gender=${sp.gender ?? 'female'}`}
+            className="rounded bg-stone-100 px-6 py-2 text-sm font-semibold text-stone-950 transition hover:bg-white"
+          >
+            Get my personal reading
+          </Link>
+          <Link
+            href="/compatibility"
+            className="rounded border border-stone-600 px-6 py-2 text-sm text-stone-200 transition hover:border-stone-400"
+          >
+            Check compatibility
+          </Link>
+        </div>
       </section>
     </div>
   );
