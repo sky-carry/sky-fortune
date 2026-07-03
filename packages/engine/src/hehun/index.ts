@@ -69,6 +69,8 @@ export function naYinElement(naYin: string): WuXing {
 }
 
 export interface HehunItem {
+  /** 稳定规则码，供多语言文案层映射（如 zodiac-liuhe / day-gan-wuhe / nayin-sheng） */
+  code: string;
   rule: string;
   delta: number;
   desc: string;
@@ -80,13 +82,13 @@ export interface HehunResult {
   items: HehunItem[];
 }
 
-function zhiRelationItems(label: string, a: Zhi, b: Zhi): HehunItem[] {
+function zhiRelationItems(label: string, codePrefix: string, a: Zhi, b: Zhi): HehunItem[] {
   const items: HehunItem[] = [];
-  if (zhiLiuHe(a, b)) items.push({ rule: `${label}六合`, delta: 10, desc: `${a}${b}六合，情投意合` });
-  if (zhiSanHe(a, b)) items.push({ rule: `${label}三合`, delta: 8, desc: `${a}${b}三合，同心同德` });
-  if (zhiLiuChong(a, b)) items.push({ rule: `${label}六冲`, delta: -12, desc: `${a}${b}相冲，观念易有分歧` });
-  if (zhiLiuHai(a, b)) items.push({ rule: `${label}相害`, delta: -8, desc: `${a}${b}相害，需注意沟通` });
-  if (zhiXing(a, b)) items.push({ rule: `${label}相刑`, delta: -6, desc: `${a}${b}相刑，宜互相包容` });
+  if (zhiLiuHe(a, b)) items.push({ code: `${codePrefix}-liuhe`, rule: `${label}六合`, delta: 10, desc: `${a}${b}六合，情投意合` });
+  if (zhiSanHe(a, b)) items.push({ code: `${codePrefix}-sanhe`, rule: `${label}三合`, delta: 8, desc: `${a}${b}三合，同心同德` });
+  if (zhiLiuChong(a, b)) items.push({ code: `${codePrefix}-liuchong`, rule: `${label}六冲`, delta: -12, desc: `${a}${b}相冲，观念易有分歧` });
+  if (zhiLiuHai(a, b)) items.push({ code: `${codePrefix}-liuhai`, rule: `${label}相害`, delta: -8, desc: `${a}${b}相害，需注意沟通` });
+  if (zhiXing(a, b)) items.push({ code: `${codePrefix}-xing`, rule: `${label}相刑`, delta: -6, desc: `${a}${b}相刑，宜互相包容` });
   return items;
 }
 
@@ -98,30 +100,30 @@ function dominantElement(chart: BaziChart): WuXing {
 export function scoreHehun(a: BaziChart, b: BaziChart): HehunResult {
   const items: HehunItem[] = [];
 
-  items.push(...zhiRelationItems('生肖', a.pillars.year.zhi, b.pillars.year.zhi));
-  items.push(...zhiRelationItems('日支', a.pillars.day.zhi, b.pillars.day.zhi));
+  items.push(...zhiRelationItems('生肖', 'zodiac', a.pillars.year.zhi, b.pillars.year.zhi));
+  items.push(...zhiRelationItems('日支', 'day-zhi', a.pillars.day.zhi, b.pillars.day.zhi));
 
   if (ganWuHe(a.dayMaster, b.dayMaster)) {
-    items.push({ rule: '日干五合', delta: 10, desc: `${a.dayMaster}${b.dayMaster}相合，日主相配` });
+    items.push({ code: 'day-gan-wuhe', rule: '日干五合', delta: 10, desc: `${a.dayMaster}${b.dayMaster}相合，日主相配` });
   }
 
   const naA = naYinElement(a.pillars.year.naYin);
   const naB = naYinElement(b.pillars.year.naYin);
   if (sheng(naA, naB) || sheng(naB, naA)) {
-    items.push({ rule: '纳音相生', delta: 6, desc: `年命${naA}${naB}相生，互相成就` });
+    items.push({ code: 'nayin-sheng', rule: '纳音相生', delta: 6, desc: `年命${naA}${naB}相生，互相成就` });
   } else if (naA === naB) {
-    items.push({ rule: '纳音比和', delta: 2, desc: `年命同属${naA}，气质相近` });
+    items.push({ code: 'nayin-bihe', rule: '纳音比和', delta: 2, desc: `年命同属${naA}，气质相近` });
   } else if (ke(naA, naB) || ke(naB, naA)) {
-    items.push({ rule: '纳音相克', delta: -6, desc: `年命${naA}${naB}相克，需互相体谅` });
+    items.push({ code: 'nayin-ke', rule: '纳音相克', delta: -6, desc: `年命${naA}${naB}相克，需互相体谅` });
   }
 
   const domA = dominantElement(a);
   const domB = dominantElement(b);
   if (a.strength.favorable.includes(domB)) {
-    items.push({ rule: '用神互补', delta: 7, desc: `对方${domB}旺，恰为己方喜用` });
+    items.push({ code: 'yongshen-complement', rule: '用神互补', delta: 7, desc: `对方${domB}旺，恰为己方喜用` });
   }
   if (b.strength.favorable.includes(domA)) {
-    items.push({ rule: '用神互补', delta: 7, desc: `己方${domA}旺，恰为对方喜用` });
+    items.push({ code: 'yongshen-complement', rule: '用神互补', delta: 7, desc: `己方${domA}旺，恰为对方喜用` });
   }
 
   const raw = 60 + items.reduce((s, it) => s + it.delta, 0);

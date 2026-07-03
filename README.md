@@ -23,7 +23,12 @@ packages/content  # 数据资产与数据感知层（已完成）：
 apps/cn           # B 境内站（已上线四个页面，Next.js）：
                   #   /            今日黄历    /huangli/[date] 任意日期黄历
                   #   /zeri        传统择日    /qiming 宝宝起名   /ceming 姓名文化解析
-apps/global       # A 出海站（规划中）
+apps/global       # A 出海站「AURELO」（英文，Next.js，端口 3400）：
+                  #   /              landing + 排盘表单（含出生时区换算到 UTC+8）
+                  #   /bazi          免费英文命盘（四柱/日主/五行分布/大运）+ AI 报告占位 CTA
+                  #   /compatibility 合婚（规则码→英文文案映射）
+packages/ai       # LLM 报告层：命盘 JSON + 约束 prompt → Claude 生成英文解读
+                  #   未设 ANTHROPIC_API_KEY 时 isAiConfigured()=false，页面显示 coming soon
 ```
 
 ## 开发
