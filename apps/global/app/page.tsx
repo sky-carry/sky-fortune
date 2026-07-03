@@ -17,7 +17,8 @@ export default function LandingPage() {
 
       <section className="mx-auto max-w-xl rounded-lg border border-stone-800 bg-stone-900/50 p-6">
         <h2 className="text-lg text-stone-100">Cast your chart — free</h2>
-        <form method="get" action="/bazi" className="mt-5 space-y-5">
+        {/* form action 不会被 next 自动加 basePath 前缀，需显式拼接 */}
+        <form method="get" action={`${process.env.NEXT_PUBLIC_BASE_PATH ?? ''}/bazi`} className="mt-5 space-y-5">
           <BirthFields />
           <button
             type="submit"

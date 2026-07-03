@@ -1,0 +1,27 @@
+# 服务器部署：docker compose -f deploy/docker-compose.yml up -d --build
+# Caddy 反代：/fortune/* -> 3502（AURELO 出海站），/fortune-cn/* -> 3501（天时历境内站）
+services:
+  fortune-global:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile
+      args:
+        APP: global
+        BASE_PATH: /fortune
+    ports:
+      - "127.0.0.1:3502:3000"
+    env_file:
+      - path: ../.env.deploy
+        required: false
+    restart: unless-stopped
+
+  fortune-cn:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile
+      args:
+        APP: cn
+        BASE_PATH: /fortune-cn
+    ports:
+      - "127.0.0.1:3501:3000"
+    restart: unless-stopped
